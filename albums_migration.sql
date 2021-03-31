@@ -10,4 +10,5 @@ CREATE TABLE albums (
     genre VARCHAR (200),
     sales FLOAT(6,2),
     PRIMARY KEY (id)
-)AUTO_INCREMENT = 1000;
+);
+-- AUTO_INCREMENT = 1000 we can use this to set id start from 1000; after last parentheses before ;
