@@ -1,6 +1,6 @@
 use employees;
 
-# Part One
+
 SELECT * FROM employees WHERE first_name IN ('Irena','Vidya', 'Maya') ORDER BY first_name AND last_name LIKE 'Reutenauer';
 
 SELECT * FROM employees WHERE first_name IN ('Irena', 'Vidya', 'Maya') ORDER BY first_name, last_name;
