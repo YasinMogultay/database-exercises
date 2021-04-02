@@ -1,18 +1,18 @@
 SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
 
-USE employees;
-
-DESCRIBE departments;
-
-DESCRIBE dept_emp;
-
-DESCRIBE dept_manager;
-
-DESCRIBE employees;
-
-DESCRIBE salaries;
-
-DESCRIBE titles;
+# USE employees;
+#
+# DESCRIBE departments;
+#
+# DESCRIBE dept_emp;
+#
+# DESCRIBE dept_manager;
+#
+# DESCRIBE employees;
+#
+# DESCRIBE salaries;
+#
+# DESCRIBE titles;
 
 # ===========
 
