@@ -44,4 +44,6 @@ WHERE emp_no IN (
     FROM salaries
     where salary = (select max(salary) from salaries)
     AND to_date > NOW()
-    )
+    );
+
+select * from employees Limit 5;
