@@ -62,32 +62,33 @@ GROUP BY r.id;
 SELECT COUNT (DISTINCT dept_name) FROM departments;
 
 # each department along with the name of the current manager for that department.
-SELECT departments.dept_name as Department_Name, concat(employees.first_name, ' ', employees.last_name) as Department_Manager
-FROM employees
-JOIN dept_manager on employees.emp_no = dept_manager.emp_no
-JOIN departments on dept_manager.dept_no = departments.dept_no WHERE dept_manager.to_date > NOW() group by dept_name order by dept_name;
+SELECT d.dept_name as Department_Name, concat(e.first_name, ' ', e.last_name) as Department_Manager
+FROM employees as e
+JOIN dept_manager as de on e.emp_no = de.emp_no
+JOIN departments as d on de.dept_no = d.dept_no WHERE de.to_date > NOW() group by dept_name order by dept_name;
 
 # Find the name of all departments currently managed by women.
-SELECT departments.dept_name as Department_Name, concat(employees.first_name, ' ', employees.last_name) as Department_Manager
-FROM employees
-JOIN dept_manager on employees.emp_no = dept_manager.emp_no
-JOIN departments on dept_manager.dept_no = departments.dept_no WHERE dept_manager.to_date > NOW() AND gender = 'f' group by dept_name order by dept_name;
+SELECT d.dept_name as Department_Name, concat(e.first_name, ' ', e.last_name) as Department_Manager
+FROM employees as e
+JOIN dept_manager as de on e.emp_no = de.emp_no
+JOIN departments as d on de.dept_no = d.dept_no WHERE de.to_date > NOW() AND gender = 'f' group by dept_name order by dept_name;
 
 # Find the current titles of employees currently working in the Customer Service department.
-SELECT titles.title as TITLE, COUNT(de.dept_name)  as TOTAL
-FROM titles
-JOIN dept_emp as e on titles.emp_no = e.emp_no
+SELECT t.title as TITLE, COUNT(de.dept_name)  as TOTAL
+FROM titles as t
+JOIN dept_emp as e on t.emp_no = e.emp_no
 JOIN departments as de on e.dept_no = de.dept_no
-WHERE de.dept_no = 'd009' AND e.to_date > NOW() AND titles.to_date > NOW() group by titles.title;
-
-
+WHERE de.dept_no = 'd009' AND e.to_date > NOW() AND t.to_date > NOW() group by t.title;
 
 # Find the current salary of all current managers.
-SELECT d.dept_name as Department_Name, concat(e.first_name, ' ', e.last_name) as Department_Manager, salaries.salary as Salary
-FROM salaries
-JOIN dept_manager dm on salaries.emp_no = dm.emp_no
-JOIN employees e on dm.emp_no = e.emp_no
-JOIN departments d on dm.dept_no = d.dept_no WHERE dm.to_date > NOW() AND salaries.to_date > NOW() order by dept_name;
+SELECT d.dept_name as Department_Name, concat(e.first_name, ' ', e.last_name) as Department_Manager, s.salary as Salary
+FROM salaries as s
+    JOIN dept_manager dm on s.emp_no = dm.emp_no
+    JOIN employees e on dm.emp_no = e.emp_no
+    JOIN departments d on dm.dept_no = d.dept_no
+WHERE dm.to_date > NOW()
+  AND s.to_date > NOW()
+order by dept_name;
 
 # Find the names of all current employees, their department name, and their current manager's name .
-SELECT concat(e.first_name, ' ', e.last_name) as Department_Manager,
+
