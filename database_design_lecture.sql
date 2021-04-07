@@ -60,13 +60,18 @@ name VARCHAR(255),
 PRIMARY KEY (id)
 );
 
+SELECT id FROM quotes;
+SELECT id FROM authors;
+SELECT * FROM topics;
+SELECT * FROM quote_topic;
+
+
 INSERT INTO topics(name) VALUES
 ('Coding'),
 ('Life'),
 ('Cooking'),
 ('Sports'),
 ('Travel');
-
 
 CREATE TABLE quote_topic (
 quote_id INTEGER UNSIGNED NOT NULL,
@@ -75,13 +80,22 @@ FOREIGN KEY (quote_id) REFERENCES quotes(id),
 FOREIGN KEY (topic_id) REFERENCES topics(id)
 );
 
+
+
 INSERT INTO quote_topic (quote_id, topic_id) VALUES
 (1,1), (2,2), (3,1), (4,2), (5,5),
 (2,1), (2,3), (3,4), (4,1), (4,3), (5,2);
 
 
-
-SELECT id FROM quotes;
-SELECT id FROM authors;
-SELECT * FROM topics;
-SELECT * FROM quote_topic;
+SELECT q.content as Quote, CONCAT(a.first_name, ' ', a.last_name) AS Full_Name,t.name
+as Topic
+FROM quotes q
+INNER JOIN quote_topic qt ON q.id = qt.quote_id
+INNER JOIN topics t ON qt.topic_id = t.id
+INNER JOIN authors a ON q.author_id = a.id
+WHERE qt.topic_id IN
+    (
+        SELECT t.id
+        FROM topics t
+        WHERE t.name = 'Coding'
+        );
