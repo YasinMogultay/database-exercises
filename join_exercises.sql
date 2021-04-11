@@ -2,90 +2,115 @@ create database join_test_db;
 
 show databases;
 
-CREATE TABLE roles (
-id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-name VARCHAR(100) NOT NULL,
-PRIMARY KEY (id)
+CREATE TABLE roles
+(
+    id   INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    PRIMARY KEY (id)
 );
 
-CREATE TABLE users (
-id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-name VARCHAR(100) NOT NULL,
-email VARCHAR(100) NOT NULL,
-role_id INT UNSIGNED DEFAULT NULL,
-PRIMARY KEY (id),
-FOREIGN KEY (role_id) REFERENCES roles (id)
+CREATE TABLE users
+(
+    id      INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    name    VARCHAR(100) NOT NULL,
+    email   VARCHAR(100) NOT NULL,
+    role_id INT UNSIGNED DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (role_id) REFERENCES roles (id)
 );
 
-INSERT INTO roles (name) VALUES ('admin');
-INSERT INTO roles (name) VALUES ('author');
-INSERT INTO roles (name) VALUES ('reviewer');
-INSERT INTO roles (name) VALUES ('commenter');
+INSERT INTO roles (name)
+VALUES ('admin');
+INSERT INTO roles (name)
+VALUES ('author');
+INSERT INTO roles (name)
+VALUES ('reviewer');
+INSERT INTO roles (name)
+VALUES ('commenter');
 
-INSERT INTO users (name, email, role_id) VALUES
-('bob', 'bob@example.com', 1),
-('joe', 'joe@example.com', 2),
-('sally', 'sally@example.com', 3),
-('adam', 'adam@example.com', 3),
-('jane', 'jane@example.com', null),
-('mike', 'mike@example.com', null);
+INSERT INTO users (name, email, role_id)
+VALUES ('bob', 'bob@example.com', 1),
+       ('joe', 'joe@example.com', 2),
+       ('sally', 'sally@example.com', 3),
+       ('adam', 'adam@example.com', 3),
+       ('jane', 'jane@example.com', null),
+       ('mike', 'mike@example.com', null);
 
-select * from roles;
-select * from users;
+select *
+from roles;
+select *
+from users;
 
 # inserted 4 new users to users table
 
-INSERT INTO users(name,email,role_id) VALUES
-('Sam','sam@example.com', 2),
-('Michael','michael@example.com',2),
-('Casey','casey@example.com', null),
-('Justin','Justin@example.com', null);
+INSERT INTO users(name, email, role_id)
+VALUES ('Sam', 'sam@example.com', 2),
+       ('Michael', 'michael@example.com', 2),
+       ('Casey', 'casey@example.com', null),
+       ('Justin', 'Justin@example.com', null);
 
 # JOIN example
-SELECT r.name,  u.name, u.email FROM roles AS r
-JOIN users  AS u ON r.id = u.role_id;
+SELECT r.name, u.name, u.email
+FROM roles AS r
+         JOIN users AS u ON r.id = u.role_id;
 
 # RIGHT JOIN example
-SELECT r.name, u.name, u.email FROM roles AS r
-RIGHT JOIN users AS u ON r.id = u.role_id;
+SELECT r.name, u.name, u.email
+FROM roles AS r
+         RIGHT JOIN users AS u ON r.id = u.role_id;
 
 # LEFT JOIN example
-SELECT r.name, COUNT(*) FROM roles AS r
-LEFT JOIN users AS u ON r.id = u.role_id;
+SELECT r.name, COUNT(*)
+FROM roles AS r
+         LEFT JOIN users AS u ON r.id = u.role_id;
 
 # counting the number of users (u.role_id) for each role
-SELECT r.name, COUNT(u.role_id) as Users FROM users as u
-RIGHT JOIN roles as r ON u.role_id = r.id
+SELECT r.name, COUNT(u.role_id) as Users
+FROM users as u
+         RIGHT JOIN roles as r ON u.role_id = r.id
 GROUP BY r.id;
 
 # === SECOND PART ===
-SELECT COUNT (DISTINCT dept_name) FROM departments;
+SELECT COUNT(DISTINCT dept_name)
+FROM departments;
 
 # each department along with the name of the current manager for that department.
 SELECT d.dept_name as Department_Name, concat(e.first_name, ' ', e.last_name) as Department_Manager
 FROM employees as e
-JOIN dept_manager as de on e.emp_no = de.emp_no
-JOIN departments as d on de.dept_no = d.dept_no WHERE de.to_date > NOW() group by dept_name order by dept_name;
+         JOIN dept_manager as de on e.emp_no = de.emp_no
+         JOIN departments as d on de.dept_no = d.dept_no
+WHERE de.to_date > NOW()
+group by dept_name
+order by dept_name;
 
 # Find the name of all departments currently managed by women.
 SELECT d.dept_name as Department_Name, concat(e.first_name, ' ', e.last_name) as Department_Manager
 FROM employees as e
-JOIN dept_manager as de on e.emp_no = de.emp_no
-JOIN departments as d on de.dept_no = d.dept_no WHERE de.to_date > NOW() AND gender = 'f' group by dept_name order by dept_name;
+         JOIN dept_manager as de on e.emp_no = de.emp_no
+         JOIN departments as d on de.dept_no = d.dept_no
+WHERE de.to_date > NOW()
+  AND gender = 'f'
+group by dept_name
+order by dept_name;
 
 # Find the current titles of employees currently working in the Customer Service department.
-SELECT t.title as TITLE, COUNT(de.dept_name)  as TOTAL
+SELECT t.title as TITLE, COUNT(de.dept_name) as TOTAL
 FROM titles as t
-JOIN dept_emp as e on t.emp_no = e.emp_no
-JOIN departments as de on e.dept_no = de.dept_no
-WHERE de.dept_no = 'd009' AND e.to_date > NOW() AND t.to_date > NOW() group by t.title;
+         JOIN dept_emp as e on t.emp_no = e.emp_no
+         JOIN departments as de on e.dept_no = de.dept_no
+WHERE de.dept_no = 'd009'
+  AND e.to_date > NOW()
+  AND t.to_date > NOW()
+group by t.title;
 
 # Find the current salary of all current managers.
-SELECT d.dept_name as Department_Name, concat(e.first_name, ' ', e.last_name) as Department_Manager, s.salary as Salary
+SELECT d.dept_name                            as Department_Name,
+       concat(e.first_name, ' ', e.last_name) as Department_Manager,
+       s.salary                               as Salary
 FROM salaries as s
-    JOIN dept_manager dm on s.emp_no = dm.emp_no
-    JOIN employees e on dm.emp_no = e.emp_no
-    JOIN departments d on dm.dept_no = d.dept_no
+         JOIN dept_manager dm on s.emp_no = dm.emp_no
+         JOIN employees e on dm.emp_no = e.emp_no
+         JOIN departments d on dm.dept_no = d.dept_no
 WHERE dm.to_date > NOW()
   AND s.to_date > NOW()
 order by dept_name;

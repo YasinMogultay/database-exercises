@@ -24,27 +24,32 @@ USE luna_db;
 
 DROP TABLE IF EXISTS pets;
 
-CREATE TABLE pets (
-                      id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-                      pet_name VARCHAR(30) NOT NULL,
-                      owner_name VARCHAR(30),
-                      age INT,
-                      PRIMARY KEY (id)
+CREATE TABLE pets
+(
+    id         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    pet_name   VARCHAR(30)  NOT NULL,
+    owner_name VARCHAR(30),
+    age        INT,
+    PRIMARY KEY (id)
 );
 
 TRUNCATE TABLE pets;
 
-INSERT INTO pets (pet_name, owner_name, age) VALUES
-('Sparkles', 'John Smith', 7),
-('Snickers', 'Fred Smith', 10),
-('Spot', 'Cathy Smith', 3),
-('Barky', 'Alex Smith', 3);
+INSERT INTO pets (pet_name, owner_name, age)
+VALUES ('Sparkles', 'John Smith', 7),
+       ('Snickers', 'Fred Smith', 10),
+       ('Spot', 'Cathy Smith', 3),
+       ('Barky', 'Alex Smith', 3);
 
-SELECT * FROM pets;
+SELECT *
+FROM pets;
 
 # check performance of query
 
-EXPLAIN SELECT id FROM pets WHERE id = 3;
+EXPLAIN
+SELECT id
+FROM pets
+WHERE id = 3;
 
 DESCRIBE pets;
 
@@ -53,17 +58,17 @@ DESCRIBE pets;
 SHOW INDEXES FROM pets;
 
 
-
 # ============= INDEX
 
 DROP TABLE IF EXISTS pets;
 
-CREATE TABLE pets (
-                      id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                      pet_name VARCHAR(30) NOT NULL,
-                      owner_name VARCHAR(30),
-                      age INT,
-                      INDEX index_owner_name (owner_name) # adding an index to another column
+CREATE TABLE pets
+(
+    id         INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    pet_name   VARCHAR(30)  NOT NULL,
+    owner_name VARCHAR(30),
+    age        INT,
+    INDEX index_owner_name (owner_name) # adding an index to another column
 );
 
 SHOW INDEX FROM pets;
@@ -76,12 +81,13 @@ SHOW INDEX FROM pets;
 
 DROP TABLE IF EXISTS pets;
 
-CREATE TABLE pets (
-                      id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                      pet_name VARCHAR(30) NOT NULL,
-                      owner_name VARCHAR(30),
-                      age INT,
-                      UNIQUE unique_owner_name (owner_name) # adding an index to another column
+CREATE TABLE pets
+(
+    id         INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    pet_name   VARCHAR(30)  NOT NULL,
+    owner_name VARCHAR(30),
+    age        INT,
+    UNIQUE unique_owner_name (owner_name) # adding an index to another column
 );
 
 SHOW INDEX FROM pets;
@@ -97,20 +103,21 @@ VALUES ('Buddy', 'Fred', 2);
 INSERT INTO pets (pet_name, owner_name, age)
 VALUES ('Snickers', 'Jack Smith', 2);
 
-SELECT * FROM pets;
-
+SELECT *
+FROM pets;
 
 
 # ============= COMPOSITE INDEXES
 
 DROP TABLE IF EXISTS pets;
 
-CREATE TABLE pets (
-                      id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                      pet_name VARCHAR(30) NOT NULL,
-                      owner_name VARCHAR(30),
-                      age INT,
-                      UNIQUE unique_owner_name (pet_name, owner_name) # adding an index to another column
+CREATE TABLE pets
+(
+    id         INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    pet_name   VARCHAR(30)  NOT NULL,
+    owner_name VARCHAR(30),
+    age        INT,
+    UNIQUE unique_owner_name (pet_name, owner_name) # adding an index to another column
 );
 
 SHOW INDEX FROM pets;
@@ -129,7 +136,8 @@ VALUES ('Snickers', 'Jack Smith', 2);
 INSERT INTO pets (pet_name, owner_name, age) -- ERROR
 VALUES ('Snickers', 'Jack Smith', 8);
 
-SELECT * FROM pets;
+SELECT *
+FROM pets;
 
 
 SHOW INDEX FROM pets;
@@ -137,10 +145,12 @@ SHOW INDEX FROM pets;
 # ============= ALTER TABLE
 
 # add name index
-ALTER TABLE pets ADD INDEX /* or UNIQUE */ pet_name_key (pet_name);
+ALTER TABLE pets
+    ADD INDEX /* or UNIQUE */ pet_name_key (pet_name);
 
 # drop name index
-ALTER TABLE pets DROP INDEX /* or UNIQUE */ pet_name_key;
+ALTER TABLE pets
+    DROP INDEX /* or UNIQUE */ pet_name_key;
 
 # show all indices / keys on a table
 SHOW INDEX FROM pets;
@@ -201,21 +211,24 @@ owners table...
 
 DROP TABLE IF EXISTS owners;
 
-CREATE TABLE owners (
-                        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                        name VARCHAR(30) NOT NULL,
-                        address VARCHAR(255) DEFAULT 'Undisclosed'
+CREATE TABLE owners
+(
+    id      INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name    VARCHAR(30) NOT NULL,
+    address VARCHAR(255) DEFAULT 'Undisclosed'
 );
 
 DROP TABLE IF EXISTS pets;
 
-CREATE TABLE pets (
-                      id INT UNSIGNED AUTO_INCREMENT,
-                      pet_name VARCHAR(30) NOT NULL,
-                      owner_id INT UNSIGNED,
-                      age INT,
-                      PRIMARY KEY (id),
-    /* CONSTRAINT fk_owner_id (to give FK a name) */ FOREIGN KEY (owner_id) REFERENCES owners(id)
+CREATE TABLE pets
+(
+    id       INT UNSIGNED AUTO_INCREMENT,
+    pet_name VARCHAR(30) NOT NULL,
+    owner_id INT UNSIGNED,
+    age      INT,
+    PRIMARY KEY (id),
+    /* CONSTRAINT fk_owner_id (to give FK a name) */
+    FOREIGN KEY (owner_id) REFERENCES owners (id)
 );
 
 describe pets;
@@ -228,8 +241,10 @@ show create table pets;
 INSERT INTO pets (pet_name, owner_id, age)
 VALUES ('Puddle', null, 2);
 
-SELECT * FROM pets;
-SELECT * FROM owners;
+SELECT *
+FROM pets;
+SELECT *
+FROM owners;
 
 INSERT INTO pets (pet_name, owner_id, age)
 VALUES ('Spot', 1, 2); -- error (referential integrity at work!)
@@ -238,17 +253,17 @@ INSERT INTO owners (name, address)
 VALUES ('Darth Smith', '1138 Death Star Rd.');
 
 INSERT INTO pets (pet_name, owner_id, age)
-VALUES ('Puddle', 1, 2); -- will run
+VALUES ('Puddle', 1, 2);
+-- will run
 
 # If dropping tables, must drop pets, then owners table
-
-
 
 
 -- ============================== OTHER EXAMPLES
 
 -- add primary key after table creation
-ALTER TABLE pets MODIFY COLUMN id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT;
+ALTER TABLE pets
+    MODIFY COLUMN id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT;
 
 -- drop primary key after table creation
 
@@ -265,10 +280,11 @@ SHOW CREATE TABLE pets;
 
 DROP TABLE IF EXISTS pets;
 
-CREATE TABLE pets (
-                      id INT UNSIGNED AUTO_INCREMENT,
-                      pet_name VARCHAR(30) NOT NULL,
-                      owner_name VARCHAR(30),
-                      age INT,
-                      PRIMARY KEY (id, age)
+CREATE TABLE pets
+(
+    id         INT UNSIGNED AUTO_INCREMENT,
+    pet_name   VARCHAR(30) NOT NULL,
+    owner_name VARCHAR(30),
+    age        INT,
+    PRIMARY KEY (id, age)
 );
