@@ -12,4 +12,7 @@ CREATE TABLE albums
     sales        FLOAT(6, 2),
     PRIMARY KEY (id)
 );
+
+SELECT * FROM albums;
+
 -- AUTO_INCREMENT = 1000 we can use this to set id start from 1000; after last parentheses before ;

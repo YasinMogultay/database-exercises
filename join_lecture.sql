@@ -13,19 +13,21 @@ USE codeup_test_db;
 DROP TABLE IF EXISTS pets;
 DROP TABLE IF EXISTS owners;
 
-CREATE TABLE owners (
- id      INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
- name    VARCHAR(30) NOT NULL,
- address VARCHAR(255) DEFAULT 'Undisclosed'
+CREATE TABLE owners
+(
+    id      INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name    VARCHAR(30) NOT NULL,
+    address VARCHAR(255) DEFAULT 'Undisclosed'
 );
 
-CREATE TABLE pets (
-      id       INT UNSIGNED AUTO_INCREMENT,
-      name     VARCHAR(30) NOT NULL,
-      owner_id INT UNSIGNED,
-      age      INT,
-      PRIMARY KEY (id),
-      FOREIGN KEY (owner_id) REFERENCES owners (id) /* ON DELETE RESTRICT | CASCADE | SET NULL */
+CREATE TABLE pets
+(
+    id       INT UNSIGNED AUTO_INCREMENT,
+    name     VARCHAR(30) NOT NULL,
+    owner_id INT UNSIGNED,
+    age      INT,
+    PRIMARY KEY (id),
+    FOREIGN KEY (owner_id) REFERENCES owners (id) /* ON DELETE RESTRICT | CASCADE | SET NULL */
 );
 
 # seed tables
@@ -41,15 +43,20 @@ VALUES ('Puddle', 1, 2);
 
 # view table records
 
-SELECT * FROM pets;
-SELECT * FROM owners;
+SELECT *
+FROM pets;
+SELECT *
+FROM owners;
 
 # delete owner (different possibilities based on how constraint behaves)
-DELETE FROM owners WHERE id = 1;
+DELETE
+FROM owners
+WHERE id = 1;
 
 # ========= BASIC JOINS
-SELECT pets.name, owners.address  FROM pets
-JOIN owners ON pets.owner_id = owners.id;
+SELECT pets.name, owners.address
+FROM pets
+         JOIN owners ON pets.owner_id = owners.id;
 #     SELECT table_name.column_name, etc. from table_name
 #     JOIN table_name_2 ON table_1.column = table_2.column (normally a foreign key connected to primary key);
 
@@ -59,27 +66,31 @@ JOIN owners ON pets.owner_id = owners.id;
 # ========= MINI EXERCISE 1
 
 # Using the owners and pets table, display the pet age, pet name, and owner name.
-SELECT pets.age, pets.name, owners.name FROM pets
-JOIN owners ON pets.owner_id = owners.id;
+SELECT pets.age, pets.name, owners.name
+FROM pets
+         JOIN owners ON pets.owner_id = owners.id;
 
 # ========= BASIC JOINS WITH ALIASES
 
 # List the number of pets at each address
 
-SELECT owners.address, COUNT(owners.address) FROM pets
-JOIN owners ON owners.id = pets.owner_id
+SELECT owners.address, COUNT(owners.address)
+FROM pets
+         JOIN owners ON owners.id = pets.owner_id
 GROUP BY owners.address;
 
-SELECT o.address, count(*) FROM pets as p
-JOIN owners as o on p.owner_id = o.id
+SELECT o.address, count(*)
+FROM pets as p
+         JOIN owners as o on p.owner_id = o.id
 group by o.address;
 
 
 # ========= MINI EXERCISE 2
 
 # Refactor your previous mini-exercise solution to use table aliases
-SELECT p.age, p.name, o.name FROM pets AS p
-JOIN owners AS o ON p.owner_id = o.id;
+SELECT p.age, p.name, o.name
+FROM pets AS p
+         JOIN owners AS o ON p.owner_id = o.id;
 
 #  ========= JOIN TYPES
 
@@ -90,19 +101,21 @@ USE codeup_test_db;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS roles;
 
-CREATE TABLE roles (
-id   INT UNSIGNED NOT NULL AUTO_INCREMENT,
-name VARCHAR(100) NOT NULL,
-PRIMARY KEY (id)
+CREATE TABLE roles
+(
+    id   INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    PRIMARY KEY (id)
 );
 
-CREATE TABLE users (
-id      INT UNSIGNED NOT NULL AUTO_INCREMENT,
-name    VARCHAR(100) NOT NULL,
-email   VARCHAR(100) NOT NULL,
-role_id INT UNSIGNED DEFAULT NULL,
-PRIMARY KEY (id),
-FOREIGN KEY (role_id) REFERENCES roles (id)
+CREATE TABLE users
+(
+    id      INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    name    VARCHAR(100) NOT NULL,
+    email   VARCHAR(100) NOT NULL,
+    role_id INT UNSIGNED DEFAULT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (role_id) REFERENCES roles (id)
 );
 
 INSERT INTO roles (name)
@@ -133,24 +146,26 @@ FROM users;
 
 # output user name and role for all records with a non-null user name and role name
 
-SELECT users.name, roles.name FROM users
-JOIN roles -- same as INNER JOIN
-ON roles.id = users.role_id;
+SELECT users.name, roles.name
+FROM users
+         JOIN roles -- same as INNER JOIN
+              ON roles.id = users.role_id;
 
 
 # output user name and their role name for all matches and all users regardless of null roles
 
 SELECT users.name, roles.name
 FROM users
-LEFT JOIN roles
-    ON roles.id = users.role_id;
+         LEFT JOIN roles
+                   ON roles.id = users.role_id;
 
 
 # output user name and role for all non-null matches and all roles with null users
 
 SELECT users.name, roles.name
-FROM users RIGHT JOIN roles
-      ON roles.id = users.role_id;
+FROM users
+         RIGHT JOIN roles
+                    ON roles.id = users.role_id;
 
 
 # ========= MINI EXERCISE 3
@@ -158,11 +173,7 @@ FROM users RIGHT JOIN roles
 # !! complete the "Join Example Database" curriculum exercise !!
 
 
-
 # ============ EXERCISE SOLUTION
-
-
-
 
 
 # ========= EMPLOYEES DB and MULTIPLE JOINS
@@ -170,20 +181,24 @@ FROM users RIGHT JOIN roles
 # output all current employee names and their current titles
 USE employees;
 
-SELECT * FROM employees;
+SELECT *
+FROM employees;
 
-SELECT * FROM titles;
+SELECT *
+FROM titles;
 
 SELECT CONCAT(employees.first_name, ' ', employees.last_name), titles.title
-FROM employees JOIN titles
-    ON titles.emp_no = employees.emp_no
+FROM employees
+         JOIN titles
+              ON titles.emp_no = employees.emp_no
 WHERE titles.to_date > NOW();
 
 
 # using aliases
 SELECT CONCAT(e.first_name, ' ', e.last_name), t.title
-FROM employees AS e JOIN titles as t
-  ON t.emp_no = e.emp_no
+FROM employees AS e
+         JOIN titles as t
+              ON t.emp_no = e.emp_no
 WHERE t.to_date > NOW();
 
 
@@ -198,9 +213,6 @@ FROM employees as e
               ON d.dept_no = de.dept_no
 WHERE de.to_date = '9999-01-01'
   AND e.emp_no = 10001;
-
-
-
 
 
 #  ============ OTHER EXAMPLES
