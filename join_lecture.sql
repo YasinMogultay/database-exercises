@@ -93,7 +93,6 @@ FROM pets AS p
          JOIN owners AS o ON p.owner_id = o.id;
 
 #  ========= JOIN TYPES
-
 # Table Set Up
 
 USE codeup_test_db;
